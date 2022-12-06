@@ -223,3 +223,94 @@ void Graph::numEdges()
     }
     std::cout << "The number of edges in the Graph is " << e << std::endl;
 }
+int Graph::indegree(int vertex){
+    Vertex *temp = HEAD;
+    int count = 0;
+
+    while (temp->downVertex != nullptr){
+        Vertex *otherTemp = temp;
+
+        while (otherTemp->nextNeighbor != nullptr){
+            otherTemp = otherTemp->nextNeighbor;
+            if (otherTemp->data == vertex){
+                count++;
+            }
+        }
+        temp = temp->downVertex;
+    }
+    return count;
+}
+
+int Graph::outdegree(int vertex){
+    Vertex *temp = HEAD;
+    int count = 0;
+
+    if (!isEmpty()){
+        while (temp->data != vertex){
+            temp = temp->downVertex;
+        }
+        Vertex *otherTemp = temp;
+
+        while (otherTemp->nextNeighbor != nullptr){
+            count++;
+            otherTemp = otherTemp->nextNeighbor;
+        }
+        return count;
+    }
+    else {
+        return 0;
+    }
+}
+
+int Graph::degree(int vertex) {
+    std::cout << "The degree of the vertex " <<vertex <<" is " << outdegree(vertex) << "\n";
+    return outdegree(vertex);
+}
+
+int *Graph::neighbours(int vertex){
+    int *neighbour;
+    int i = 0;
+    Vertex *temp = new Vertex();
+    temp = HEAD;
+    while (temp != nullptr && temp->data != vertex){
+        temp = temp->downVertex;
+    }
+    if (temp == nullptr){
+        std::cout<<"Vertex doesn't exist."<<std::endl;    
+    }
+    else{
+        while (temp->nextNeighbor != nullptr){
+            neighbour[i] = temp->nextNeighbor->data;
+            i++;
+            temp = temp->nextNeighbor;
+        }
+    } 
+    return neighbour;
+}
+
+bool Graph::neighbour(int vertex1, int vertex2){
+    Vertex *temp = new Vertex();
+    Vertex *otherTemp = new Vertex(vertex2);
+    temp = HEAD;
+
+    while (temp != nullptr && temp->data != vertex1){
+        temp = temp->downVertex;
+    }
+
+    if (temp == nullptr){
+        std::cout<<"Vertex doesn't exist."<<std::endl;    
+        return false;
+    }
+    else{
+        while (temp->nextNeighbor != nullptr && temp->nextNeighbor->data != vertex2){
+            temp = temp->nextNeighbor;
+        }
+        if (temp->nextNeighbor == nullptr){
+            return false;
+        }
+        else{
+            std::cout << vertex1 <<" and "<< vertex2 <<" are neighbours.\n";
+            return true;
+        }
+    }
+}
